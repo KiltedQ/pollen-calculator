@@ -1,13 +1,11 @@
 #!/bin/sh
 
-# Replace the placeholder API URL in the built JS files with the runtime env var
-if [ -n "$VITE_API_URL" ]; then
-  echo "Injecting VITE_API_URL: $VITE_API_URL"
-  find /usr/share/nginx/html/assets -name "*.js" -exec \
-    sed -i "s|http://localhost:8000|$VITE_API_URL|g" {} \;
-else
-  echo "Warning: VITE_API_URL not set, defaulting to http://localhost:8000"
-fi
+API_URL="${VITE_API_URL:-http://localhost:8000}"
+echo "Injecting API_URL: $API_URL"
 
-# Start nginx
+# Write a runtime config JS file that the app will read
+cat > /usr/share/nginx/html/config.js << JSEOF
+window.__API_URL__ = "$API_URL";
+JSEOF
+
 nginx -g "daemon off;"
