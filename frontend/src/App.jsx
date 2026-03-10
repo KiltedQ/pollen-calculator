@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./index.css";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE = (typeof window !== "undefined" && window.__API_URL__) || import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const STATUS_CONFIG = {
   pre_season:   { emoji: "🌱", color: "var(--blue)" },
